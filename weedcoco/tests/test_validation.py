@@ -56,35 +56,54 @@ SMALL_WEEDCOCO = {
             "id": 0,
             "image_id": 46,
             "category_id": 0,
-            "segmentation": [[596, 207, 521]],
+            "segmentation": [[596, 207, 521, 153, 498, 89]],
             "iscrowd": 0,
         },
         {
             "id": 1,
             "image_id": 46,
             "category_id": 0,
-            "segmentation": [[689, 787, 589, 745]],
+            "segmentation": [
+                [
+                    689,
+                    787,
+                    589,
+                    745,
+                    553,
+                    794,
+                    553,
+                    857,
+                    573,
+                    886,
+                    642,
+                    886,
+                    678,
+                    850,
+                    707,
+                    814,
+                ]
+            ],
             "iscrowd": 0,
         },
         {
             "id": 2,
             "image_id": 46,
             "category_id": 1,
-            "segmentation": [[486, 335, 399]],
+            "segmentation": [[486, 335, 399, 395, 354, 490]],
             "iscrowd": 0,
         },
         {
             "id": 3,
             "image_id": 1,
             "category_id": 1,
-            "segmentation": [[810, 225, 841, 234]],
+            "segmentation": [[810, 225, 841, 234, 846, 266]],
             "iscrowd": 0,
         },
         {
             "id": 4,
             "image_id": 1,
             "category_id": 1,
-            "segmentation": [[1070, 626, 1055, 722]],
+            "segmentation": [[1070, 626, 1055, 722, 980, 739]],
             "iscrowd": 0,
         },
     ],
@@ -286,3 +305,7 @@ def _make_unreferenced(weedcoco, section, new_id=1000):
 def test_id_not_referenced(func, bad_weedcoco):
     with pytest.raises(ValidationError, match="is unreferenced"):
         func(bad_weedcoco)
+
+
+# TODO: Test invalid bbox coordinates and boundary cases
+# TODO: Test invalid polygon coordinates

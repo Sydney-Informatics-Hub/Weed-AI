@@ -18,7 +18,57 @@ allOf:
         type: number
         desciption: |-
           A number identifying the category which the annotation belongs to.
-  - anyOf:
-# TODO: alternative annotation formats
-    - type: object
-    - type: object
+      bbox:
+        type: array
+        items:
+          type: number
+          minimum: 0
+        minItems: 4
+        maxItems: 4
+        description: |-
+          Axis-aligned bounding box as [x,y,width,height] with 0-indexed x and
+          y values.
+      segmentation:
+        anyOf:
+          - type: array  # [[x1, y1, x2, y2, ...]] with more elements for >1 polygon
+            items:
+              type: array
+              items:
+                type: number
+                minimum: 0
+              minItems: 6  # a triangle at a minimum
+            minItems: 1
+            description: |-
+              Polygon as a series of 0-indexed coordinates [x0,y0,x1,y1,...]
+          - type: object
+            required:
+              - counts
+              - size
+            properties:
+              counts:
+                anyOf:
+                  # Not yet supported:
+                  # - type: string
+                  #   description: Compressed RLE
+                  - type: array
+                    items:
+                      type: number
+                      minimum: 0
+                    description: Unompressed RLE
+              size:
+                type: array
+                items:
+                  type: number
+                  minimum: 1
+                minItems: 2
+                maxItems: 2
+            additionalProperties: false
+      area:
+        type: number
+      iscrowd:
+        type: number
+        description: |-
+          1 if the annotated segment includes multiple objects of the specified
+          category, 0 otherwise.
+        minimum: 0
+        maximum: 1

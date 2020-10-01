@@ -88,7 +88,65 @@ def validate_references(
 
 def validate_coordinates(weedcoco):
     """Check that annotation coordinates are within the image"""
-    # TODO
+    image_lookup = {image["id"]: image for image in weedcoco["images"]}
+    for annotation in weedcoco["annotations"]:
+        width = image_lookup[annotation["image_id"]]["width"]
+        height = image_lookup[annotation["image_id"]]["height"]
+        if "bbox" in annotation:
+            x, y, bbox_width, bbox_height = annotation["bbox"]
+            if (
+                x >= width
+                or x + bbox_width > width
+                or y >= height
+                or y + bbox_height >= height
+                or bbox_width == 0
+                or bbox_height == 0
+            ):
+                raise ValidationError(
+                    f"Invalid bounding box dimensions: "
+                    f"x1={x}, y1={y}, x2={x + bbox_width}, y2={y + bbox_width} "
+                    f"must fit within image dimensions "
+                    f"(w={width}, h={height}) "
+                    f"and have non-zero area."
+                )
+        if "segmentation" in annotation and hasattr(
+            annotation["segmentation"], "items"
+        ):
+            # RLE
+            if annotation["segmentation"]["size"] != [width, height]:
+                raise ValidationError(
+                    f"Segmentation size {annotation['segmentation']['size']}"
+                    f" does not match image size {[width, height]})"
+                )
+            if isinstance(annotation["segmentation"]["counts"], str):
+                # TODO: determine if out of bounds
+                pass
+            else:
+                n_pixels = sum(annotation["segmentation"]["counts"])
+                if n_pixels > width * height:
+                    raise ValidationError(
+                        f"RLE-based segmentation is bigger "
+                        f"than image of size {[width, height]}. "
+                        f"Got counts summing to {n_pixels}"
+                    )
+        elif "segmentation" in annotation:
+            # polygons
+            for polygon in annotation["segmentation"]:
+                if len(polygon) % 2 == 1:
+                    raise ValidationError(
+                        "Polygons must have an even number of elements"
+                    )
+
+            is_x = True
+            for val in polygon:
+                if val >= (width if is_x else height):
+                    raise ValidationError(
+                        f"Polygon coordinate out of bounds: "
+                        f"{val} >= {'width' if is_x else 'height'}="
+                        f"{width if is_x else height}"
+                    )
+
+        # TODO: check area within tolerance
 
 
 def validate_image_sizes(weedcoco, images_root):
