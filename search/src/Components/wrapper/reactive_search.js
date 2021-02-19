@@ -7,9 +7,22 @@ import {
     ReactiveList,
     SelectedFilters
 } from '@appbaseio/reactivesearch';
+import { makeStyles } from '@material-ui/core/styles';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
+const useStyles = makeStyles(theme => (console.log(theme) || {
+    image: {
+        width: "calc(100% + 20px)",
+        height: "220px",
+        margin: "-10px -10px 0",
+        backgroundColor: '#fcfcfc',
+        backgroundSize: "contain",
+        backgroundPosition: "center center",
+        backgroundRepeat: "no-repeat",
+        position: "relative",
+    }
+}));
 
 const theme = {
     typography: {
@@ -34,11 +47,20 @@ const WeedAIResultCard = (props) => {
       return item.agcontext__growth_stage_min_text;
     return item.agcontext__growth_stage_min_text + " to " + item.agcontext__growth_stage_max_text;
   }
+  const classes = useStyles();
   return (
     <ResultCard>
-        <ResultCard.Image
-            src={item.thumbnail}
-        />
+        <div className={classes.image} style={{ backgroundImage: `url(${item.thumbnail})` }}>
+          {item.annotations.filter(annot => annot.bbox).map(annot => (<div style={{
+            border: "1px solid",
+            borderColor: annot.category.name.startsWith("weed") ? "#dc3545" : annot.category.name.startsWith("crop") ? "#28a745" : "gray",
+            position: "absolute",
+            left: 220 / item.width * annot.bbox[0],
+            top: 220 / item.height * annot.bbox[1],
+            width: 220 / item.width * annot.bbox[2],
+            height: 220 / item.width * annot.bbox[3],
+          }} />))}
+        </div>
         <ResultCard.Description>
             <ul className="annotations">
             {
@@ -93,6 +115,12 @@ export const TestWeedAIResultCard = () => {
                 821,
                 564
               ]
+            ],
+            "bbox": [
+              694,
+              563,
+              155,
+              178
             ],
             "iscrowd": 0,
             "category": {
@@ -152,7 +180,13 @@ export const TestWeedAIResultCard = () => {
             "category__eppo_taxon_code": "DAUCS",
             "category__eppo_nontaxon_code": "3UMRC",
             "category__role": "crop",
-            "category__id": 0
+            "category__id": 0,
+            "bbox": [
+              699,
+              747,
+              100,
+              153
+            ]
           },
           {
             "id": 492,
@@ -188,7 +222,13 @@ export const TestWeedAIResultCard = () => {
             "category__name": "weed: UNSPECIFIED",
             "category__species": "UNSPECIFIED",
             "category__role": "weed",
-            "category__id": 1
+            "category__id": 1,
+            "bbox": [
+              88,
+              711,
+              157,
+              150
+            ]
           },
           {
             "id": 493,
@@ -234,7 +274,13 @@ export const TestWeedAIResultCard = () => {
             "category__eppo_taxon_code": "DAUCS",
             "category__eppo_nontaxon_code": "3UMRC",
             "category__role": "crop",
-            "category__id": 0
+            "category__id": 0,
+            "bbox": [
+              682,
+              216,
+              224,
+              195
+            ]
           }
         ],
         "thumbnail": "foo/02/020_image.png",
