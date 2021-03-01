@@ -24,7 +24,7 @@ The University will also use a minimal build of Google Analytics to monitor aggr
  
 User account data will be subject to ongoing retention, unless the user requests its deletion, to enable ongoing authentication and ongoing dataset management.
  
-Uploaded images and datasets will published online using a CC-BY 4.0 license.
+Uploaded images and datasets will published online using a CC BY or CC BY SA 4.0 license, and uploaders must be authorised to share the content under the license they select.
  
 Images and datasets will be retained indefinitely to support long term research needs.
  

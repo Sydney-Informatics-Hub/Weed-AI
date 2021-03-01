@@ -208,7 +208,7 @@ export default function NavbarComponent(props) {
           <footer className={classes.footer}>
             <Typography variant='caption'>
               <p>Site Copyright &copy; 2021 The University of Sydney. <a href="https://github.com/Sydney-Informatics-Hub/Weed-ID-Interchange/">Contribute on GitHub</a> (MIT Licensed). See our <a href="/privacy">Privacy Policy</a>.</p>
-              <p>Images and annotations are licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. See <a href="/datasets">Dataset</a> pages for attribution.</p>
+              <p>See <a href="/datasets">Dataset</a> pages for licensing and attribution of images and annotations.</p>
             </Typography>
           </footer>
         </Box>

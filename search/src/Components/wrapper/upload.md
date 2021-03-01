@@ -2,23 +2,21 @@
 
 We currently support uploads in MS COCO and [WeedCOCO](/weedcoco) formats.
 
-
 We natively support WeedCOCO format which extends on MS COCO to specify a weed
 ID-oriented category naming scheme, to include agricultural context and
 [schema.org/Dataset](https://schema.org/Dataset)-compatible metadata. We provide an uploader
 for MS COCO format, with forms to enter agricultural context and metadata
 please ensure the category names are conformant before uploading.
 
-We require that contributors license their images and annotations under the
-liberal [CC-BY 4.0 licence](https://creativecommons.org/licenses/by/4.0/)
-(Creative Commons Attribution Required). Uploaders must have the rights to the
-content that they upload, and must agree to release their content (images and
-annotations) under the terms of that licence.
+We require that contributors license their images and annotations under a
+liberal Creative Commons licence, either [CC BY 4.0 licence](https://creativecommons.org/licenses/by/4.0/) (Attribution Required) or [CC BY SA 4.0 licence](https://creativecommons.org/licenses/by/sa/4.0/) (Attribution Required, Share Alike).
+Uploaders must have the rights to the content that they upload, and must agree to release their content (images and annotations) under the terms of that licence.
 
 In brief (and not a substitute for the License), the CC BY 4.0 License enables
 users to freely share and adapt the material for any purpose, even
 commercially, given appropriate attribution and that there are no additional
-restrictions made.
+restrictions made.  The CC BY SA 4.0 License requires that any modifications
+are published under the same licence.
 
 ## Data Quality Requirements
 

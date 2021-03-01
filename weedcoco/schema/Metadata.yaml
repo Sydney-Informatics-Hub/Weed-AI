@@ -84,4 +84,4 @@ properties:
     type: string
     format: uri
     default: https://creativecommons.org/licenses/by/4.0/
-    description: URL of license document. Currently, the repository requires all contributions to be CC-BY-4.0
+    description: URL of license document. Currently, the repository requires all contributions to be CC BY 4.0 or CC BY SA 4.0
