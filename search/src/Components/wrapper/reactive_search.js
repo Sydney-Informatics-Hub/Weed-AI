@@ -639,7 +639,11 @@ class ReactiveSearchComponent extends Component {
                         componentId="result"
                         dataField="results"
                         title="Results"
-                        sortOptions={[{"label": "random order", "dataField": "sortKey", "sortBy": "asc"}]}
+                        sortOptions={[
+                            {"label": "random order", "dataField": "sortKey", "sortBy": "asc"},
+                            {"label": "# annotations", "dataField": "annotation_count", "sortBy": "desc"},
+                            {"label": "# species", "dataField": "category_count", "sortBy": "desc"},
+                        ]}
                         from={0}
                         size={20}
                         {...makeProps("result", false)}

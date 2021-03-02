@@ -122,6 +122,10 @@ class ElasticSearchIndexer:
                     image.setdefault(f"annotation__{k}", []).append(annotation[k])
 
             image["task_type"] = sorted(get_task_types(image["annotations"]))
+            image["annotation_count"] = len(image["annotations"])
+            image["category_count"] = len(
+                {annotation["category_id"] for annotation in image["annotations"]}
+            )
             yield image
 
     def generate_batches(self):
