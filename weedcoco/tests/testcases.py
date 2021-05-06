@@ -82,7 +82,7 @@ SMALL_WEEDCOCO = {
             "id": 0,
         },
         {
-            "name": "weed: unspecified",
+            "name": "weed: UNSPECIFIED",
             "species": "UNSPECIFIED",
             "role": "weed",
             "id": 1,
@@ -129,31 +129,6 @@ SMALL_WEEDCOCO = {
         }
     ],
 }
-
-test_bad_category_name_expected = [
-    {
-        "error_type": "jsonschema",
-        "n_errors_found": "1",
-        "error_details": [
-            {
-                "path": ["categories", 0, "name"],
-                "value": "foobar",
-                "message": "'foobar' does not match '^((crop|weed): ([a-z][a-z ]+|UNSPECIFIED)|crop|weed|none)$'",
-            }
-        ],
-    },
-    {
-        "error_type": "jsonschema",
-        "n_errors_found": "1",
-        "error_details": [
-            {
-                "path": ["categories", 0, "name"],
-                "value": "weed: 1",
-                "message": "'weed: 1' does not match '^((crop|weed): ([a-z][a-z ]+|UNSPECIFIED)|crop|weed|none)$'",
-            }
-        ],
-    },
-]
 
 test_missing_required_at_root_expected = [
     {

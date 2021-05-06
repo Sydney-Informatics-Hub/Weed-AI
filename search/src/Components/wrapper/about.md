@@ -57,6 +57,8 @@ The software is open source and open to contribution on [GitHub](https://github.
 
 [![The University of Sydney logo](/usyd-logo.png "The University of Sydney")](https://sydney.edu.au)
 
+We make use of [data from EPPO](https://data.eppo.int/) to validate and cross-reference plant species information, in accordance with the [EPPO Codes Open Data Licence](https://data.eppo.int/media/Open_Licence.pdf).
+
 # Privacy
 
 The collection of information is bound by our [Privacy Policy](/privacy).

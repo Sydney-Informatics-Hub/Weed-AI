@@ -134,7 +134,12 @@ class AgContextForm extends Component {
               data={this.props.formData}
               renderers={renderers}
               cells={materialCells}
-              ajv = {createAjv({useDefaults: true})}
+              ajv = {createAjv({
+                useDefaults: true,
+                formats: {
+                  'plant_species': {test: x => true},  // bypass validation for now
+                },
+              })}
               onChange={e => {
                   if (this.props.handleValidation){
                     this.props.handleValidation('agcontexts', e.errors.length === 0);

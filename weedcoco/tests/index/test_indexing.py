@@ -38,8 +38,35 @@ def test_task_type():
 
 def test_annotation_and_category():
     "Check annotations and categories are correctly indexed with each image"
-    # TODO
-    pytest.xfail("Not yet implemented")
+    indexer = ElasticSearchIndexer(
+        weedcoco_path=BASIC_INPUT_PATH, thumbnail_dir=THUMBNAIL_DIR
+    )
+    expected_names = {
+        0: {"name": "crop: daucus carota", "taxo_names": {"crop: daucus carota"}},
+        1: {"name": "weed: UNSPECIFIED", "taxo_names": {"weed: UNSPECIFIED", "weed"}},
+        2: {
+            "name": "weed: sonchus oleraceus",
+            "taxo_names": {
+                "weed: sonchus oleraceus",
+                "weed: non-poaceae",
+                "weed: asteraceae",
+                "weed",
+            },
+        },
+        3: {
+            "name": "weed: lolium perenne",
+            "taxo_names": {"weed: lolium perenne", "weed: poaceae", "weed"},
+        },
+    }
+    for entry in indexer.generate_index_entries():
+        assert entry["annotations"]  # TODO: check correct number of annotations
+        for annotation in entry["annotations"]:
+            category_id = annotation["category_id"]
+            assert annotation["category"]["name"] == expected_names[category_id]["name"]
+            assert (
+                set(annotation["category"]["taxo_names"])
+                == expected_names[category_id]["taxo_names"]
+            )
 
 
 def test_growth_range():

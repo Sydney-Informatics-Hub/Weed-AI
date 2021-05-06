@@ -4,15 +4,68 @@ import pathlib
 import argparse
 import sys
 import json
+import tempfile
+import datetime
 
+from jsonschema import FormatChecker
 from jsonschema.validators import Draft7Validator, RefResolver
 import yaml
+
+from .species_utils import get_eppo_singleton
 
 SCHEMA_DIR = pathlib.Path(__file__).parent / "schema"
 MAIN_SCHEMAS = {
     "weedcoco": "https://weedid.sydney.edu.au/schema/main.json",
     "compatible-coco": "https://weedid.sydney.edu.au/schema/compatible-coco.json",
 }
+
+FORMAT_CHECKER = FormatChecker()
+# TODO: change from temp path to config
+EPPO_CACHE_PATH = pathlib.Path(tempfile.gettempdir()) / "eppo-codes.zip"
+
+
+@FORMAT_CHECKER.checks("date")
+def check_date_missing_parts_format(value):
+    if value[-1:] == "X":
+        try:
+            return datetime.datetime.strptime(value, "%Y-%m-XX")
+        except ValueError:
+            try:
+                return datetime.datetime.strptime(value, "%Y-XX-XX")
+            except ValueError:
+                return datetime.datetime.strptime(value, "XXXX-XX-XX")
+
+    return datetime.datetime.strptime(value, "%Y-%m-%d")
+
+
+@FORMAT_CHECKER.checks("plant_species")
+def check_plant_species_format(value):
+    if not value.islower():
+        return False
+    eppo = get_eppo_singleton(EPPO_CACHE_PATH)
+    try:
+        return eppo.lookup_preferred_name(value, species_only=False)
+    except KeyError:
+        return False
+
+
+@FORMAT_CHECKER.checks("weedcoco_category")
+def check_weedcoco_category_format(value):
+    prefix, colon, species = value.partition(": ")
+    if not colon:
+        # Category must begin with weed, crop or none
+        return prefix in {"weed", "crop", "none"}
+
+    # Specific category must begin with 'weed:' or 'crop:'
+    if prefix not in {"weed", "crop"}:
+        return False
+
+    if species == "UNSPECIFIED":
+        # crop: UNSPECIFIED is not a valid category
+        return prefix == "weed"
+
+    # Species name should be lowercase in category
+    return check_plant_species_format(species)
 
 
 class ValidationError(Exception):
@@ -56,7 +109,7 @@ def validate_json(weedcoco, schema="weedcoco", schema_dir=SCHEMA_DIR):
         ref_store = validate_json.ref_store
     schema_uri = MAIN_SCHEMAS[schema]
     main_schema = ref_store[schema_uri]
-    validator = Draft7Validator(main_schema)
+    validator = Draft7Validator(main_schema, format_checker=FORMAT_CHECKER)
     validator.resolver = RefResolver(schema_uri, main_schema, store=ref_store)
     errors = [error for error in validator.iter_errors(weedcoco)]
     if len(errors):

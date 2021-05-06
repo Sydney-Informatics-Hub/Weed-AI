@@ -7,6 +7,10 @@ import PIL.Image
 import yaml
 import imagehash
 
+from .species_utils import get_eppo_singleton
+
+EPPO_PATH = "_eppo_xmlfull.zip"
+
 
 def set_info(coco, metadata):
     info = coco.get("info", {}).copy()
@@ -123,6 +127,37 @@ def get_task_types(annotations):
             out.add("bounding box")
         if "bbox" in annotation:
             out.add("bounding box")
+    return out
+
+
+def get_supercategory_names(name):
+    if not name.startswith("weed: "):
+        return []
+
+    species = name.split(": ", 1)[1]
+    out = ["weed"]
+    if species == "UNSPECIFIED":
+        return out
+
+    eppo = get_eppo_singleton(EPPO_PATH)
+    try:
+        entry = eppo.lookup_preferred_name(species, species_only=False)
+    except Exception:
+        warnings.warn(f"Failed to lookup species {repr(species)}")
+        return out
+
+    try:
+        family = next(
+            code for code in entry["ancestors"] if code.endswith(eppo.FAMILY_SUFFIX)
+        )
+    except StopIteration:
+        family = None
+    if family != "1GRAF":
+        out.append("weed: non-poaceae")
+
+    if family is not None:
+        family_entry = eppo.entries[family]
+        out.append(f"weed: {family_entry['preferred_name'].lower()}")
     return out
 
 

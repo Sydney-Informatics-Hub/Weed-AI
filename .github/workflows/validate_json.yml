@@ -58,8 +58,3 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '10'
-      - run: npm install -g ajv-cli@3.3.0
-      - name: Validate JSON with ajv until we are confident with Python's jsonschema
-        run: |
-          cd weedcoco/schema
-          ajv -s main.json -r '*.json' -d ../cwfid_to_json/cwfid_imageinfo.json -d ../deepweeds_to_json/deepweeds_imageinfo.json

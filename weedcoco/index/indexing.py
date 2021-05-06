@@ -8,6 +8,7 @@ from weedcoco.utils import (
     denormalise_weedcoco,
     lookup_growth_stage_name,
     get_task_types,
+    get_supercategory_names,
 )
 
 
@@ -65,6 +66,11 @@ class ElasticSearchIndexer:
 
         variable_to_null_fields = ["camera_fov", "camera_lens_focallength"]
         na_to_null_fields = ["bbch_growth_range"]
+
+        for category in coco["categories"]:
+            category["taxo_names"] = [category["name"]] + get_supercategory_names(
+                category["name"]
+            )
 
         for agcontext in coco["agcontexts"]:
             # massage for ES

@@ -121,7 +121,7 @@
         {
             "id": 6,
             "image_id": 1,
-            "category_id": 1,
+            "category_id": 2,
             "segmentation": [
                 [
                     925,
@@ -151,7 +151,7 @@
         {
             "id": 7,
             "image_id": 1,
-            "category_id": 1,
+            "category_id": 3,
             "segmentation": [
                 [
                     706,
@@ -650,18 +650,19 @@
     "categories": [
         {
             "name": "crop: daucus carota",
-            "common_name": "carrot",
-            "species": "daucus carota",
-            "eppo_taxon_code": "DAUCS",
-            "eppo_nontaxon_code": "3UMRC",
-            "role": "crop",
             "id": 0
         },
         {
             "name": "weed: UNSPECIFIED",
-            "species": "UNSPECIFIED",
-            "role": "weed",
             "id": 1
+        },
+        {
+            "name": "weed: sonchus oleraceus",
+            "id": 2
+        },
+        {
+            "name": "weed: lolium perenne",
+            "id": 3
         }
     ],
     "info": {

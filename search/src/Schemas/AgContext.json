@@ -58,7 +58,7 @@
         {
           "type": "string",
           "title": "Other Crop",
-          "pattern": "[A-Za-z][^ ]* [A-Za-z].*",
+          "format": "plant_species",
           "description": "Specify the crop's scientific name."
         },
         {

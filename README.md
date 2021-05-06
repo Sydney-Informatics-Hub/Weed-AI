@@ -51,6 +51,8 @@ Reporting these details will help ensure consistency in published datasets for e
 This project has been funded by the Grains Research and Development Corporation.
 The platform was developed by the Sydney Informatics Hub, a core research facility of the University of Sydney, as part of a research collaboration with the Australian Centre for Field Robotics and the Precision Weed Control Group at the University of Sydney.
 
+We make use of [data from EPPO](https://data.eppo.int/) to validate and cross-reference plant species information, in accordance with the [EPPO Codes Open Data Licence](https://data.eppo.int/media/Open_Licence.pdf).
+
 # Citation Guidelines 
 
 ## General 

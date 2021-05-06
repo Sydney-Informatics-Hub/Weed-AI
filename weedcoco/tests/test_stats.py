@@ -83,7 +83,7 @@ SMALL_WEEDCOCO = {
             "id": 0,
         },
         {
-            "name": "weed: unspecified",
+            "name": "weed: UNSPECIFIED",
             "species": "UNSPECIFIED",
             "role": "weed",
             "id": 1,

@@ -153,7 +153,7 @@ def test_category_name_map2(converter):
 
     # category_name_map2 has categories in a different order to category_name_map1.
     assert result["categories"] == [
-        {"id": 0, "name": "weed: fake species name"},
+        {"id": 0, "name": "weed: raphanus raphanistrum"},
         {"id": 1, "name": "weed: rapistrum rugosum"},
         {"id": 2, "name": "weed: lolium perenne"},
     ]

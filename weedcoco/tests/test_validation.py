@@ -3,6 +3,7 @@
 import functools
 import copy
 import random
+import re
 
 import pytest
 
@@ -18,7 +19,6 @@ from weedcoco.validation import (
 from .testcases import (
     MINIMAL_WEEDCOCO,
     SMALL_WEEDCOCO,
-    test_bad_category_name_expected,
     test_missing_required_at_root_expected,
 )
 
@@ -28,7 +28,6 @@ validate_image_sizes_cwd = functools.partial(validate_image_sizes, images_root="
 
 def _set_category_name(coco, name):
     coco = copy.deepcopy(coco)
-    print(coco)
     coco["categories"][0]["name"] = name
     return coco
 
@@ -73,16 +72,87 @@ def test_okay(func):
     func(SMALL_WEEDCOCO)
 
 
+@pytest.mark.parametrize("func", [validate, validate_json])
 @pytest.mark.parametrize(
-    "func,bad_name,expected",
-    zip([validate_json] * 2, ["foobar", "weed: 1"], test_bad_category_name_expected),
+    "bad_name,messages",
+    [
+        ("foobar", ["is not a 'weedcoco_category'", "does not match"]),
+        ("weed 1", ["is not a 'weedcoco_category'", "does not match"]),
+        ("crop: UNSPECIFIED", ["is not a 'weedcoco_category'"]),
+        ("crop: daugus carotta", ["is not a 'weedcoco_category'"]),
+        ("weed: lollium rigidum", ["is not a 'weedcoco_category'"]),
+        ("weed: Triticum Aestivum", ["is not a 'weedcoco_category'", "does not match"]),
+    ],
 )
-def test_bad_category_name(func, bad_name, expected):
+def test_bad_category_name(func, bad_name, messages):
     weedcoco = copy.deepcopy(SMALL_WEEDCOCO)
     weedcoco = _set_category_name(weedcoco, bad_name)
-    with pytest.raises(JsonValidationError, match="does not match") as e:
+    with pytest.raises(JsonValidationError, match=repr(bad_name)) as e:
         func(weedcoco)
-    assert _remove_schema_from_error(e.value.get_error_details()) == expected
+    expected = {
+        "error_type": "jsonschema",
+        "n_errors_found": str(len(messages)),
+    }
+    actual_errors = _remove_schema_from_error(e.value.get_error_details())
+    actual_details = actual_errors.pop("error_details")
+    assert expected == actual_errors
+    assert all(d["path"] == ["categories", 0, "name"] for d in actual_details)
+    assert all(d["value"] == bad_name for d in actual_details)
+    assert all(
+        re.match(f"{re.escape(repr(bad_name))} {message}", d["message"])
+        for d, message in zip(actual_details, messages)
+    )
+
+
+@pytest.mark.parametrize("func", [validate, validate_json])
+@pytest.mark.parametrize(
+    "bad_name",
+    [
+        "wheat",
+        "oats",
+        "pasture",
+        "fallow",
+        "daucus carota",
+        "brassica oleracea var. alboglabra",
+    ],
+)
+def test_crop_type(func, bad_name):
+    weedcoco = copy.deepcopy(SMALL_WEEDCOCO)
+    weedcoco["agcontexts"][0]["crop_type"] = bad_name
+    func(weedcoco)
+
+
+@pytest.mark.parametrize("func", [validate, validate_json])
+@pytest.mark.parametrize(
+    "bad_name",
+    [
+        "weet",
+        "daugus carota",
+    ],
+)
+def test_bad_crop_type(func, bad_name):
+    weedcoco = copy.deepcopy(SMALL_WEEDCOCO)
+    weedcoco["agcontexts"][0]["crop_type"] = bad_name
+    with pytest.raises(ValidationError):
+        func(weedcoco)
+
+
+@pytest.mark.parametrize("func", [validate_json])
+@pytest.mark.parametrize(
+    "name",
+    [
+        "weed",
+        "crop",
+        "none",
+        "weed: UNSPECIFIED",
+        "crop: triticum aestivum",
+        "weed: triticum aestivum",
+    ],
+)
+def test_category_name(func, name):
+    weedcoco = copy.deepcopy(SMALL_WEEDCOCO)
+    weedcoco = _set_category_name(weedcoco, name)
+    func(weedcoco)
 
 
 def _make_duplicate_id(weedcoco, key, idx, insert_at=-1):
