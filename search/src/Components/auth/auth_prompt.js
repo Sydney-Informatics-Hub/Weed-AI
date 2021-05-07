@@ -49,11 +49,11 @@ export default function AuthPrompt(props) {
     <div>
       <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
         Please&nbsp;
-        <Button variant="outlined" color="primary" onClick={handleLogin}>
+        <Button id="sign_in_button" variant="outlined" color="primary" onClick={handleLogin}>
             Sign In
         </Button>
         &nbsp;or&nbsp;
-        <Button variant="outlined" color="primary" onClick={handleRegister}>
+        <Button id="sign_up_button" variant="outlined" color="primary" onClick={handleRegister}>
             Sign up
         </Button>
         &nbsp;or&nbsp;

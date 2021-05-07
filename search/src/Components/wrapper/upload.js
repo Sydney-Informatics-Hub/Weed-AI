@@ -124,13 +124,14 @@ class UploadComponent extends Component {
                 <div>
                     <h2>Current upload status: {this.state.upload_status}</h2>
                     <p style={{color: "#f0983a"}}>{this.state.upload_status_details}</p>
-                    <Button variant="outlined" color="primary" onClick={this.handleLogout}>
+                    <Button id="sign_out_button" variant="outlined" color="primary" onClick={this.handleLogout}>
                         Log out
                     </Button>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <FormControl className={classes.formControl}>
                         <Select
+                        id="annotation_format"
                         value={this.state.upload_type}
                         displayEmpty
                         onChange={this.handleChange}

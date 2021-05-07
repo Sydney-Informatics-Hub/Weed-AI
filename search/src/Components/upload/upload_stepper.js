@@ -318,6 +318,7 @@ class UploadStepper extends React.Component {
                     )}
         
                     <Button
+                        id="next_and_submit"
                         variant="contained"
                         color="primary"
                         onClick={this.isNextEnabled() === 'agcontexts' ? this.handleUploadAgcontexts : this.isNextEnabled() === 'metadata' ? this.handleUploadMetadata : this.handleNext}
