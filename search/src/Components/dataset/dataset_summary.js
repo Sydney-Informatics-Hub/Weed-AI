@@ -205,6 +205,7 @@ export const DatasetSummary = (props) => {
       <React.Fragment>
         <Helmet>
           <title>{metadata.name} Dataset - Weed-AI</title>
+          <meta property="og:title" content={"Weed-AI dataset: " + metadata.name} />
           <meta name="description" content={getFirstLine(displayMeta.description) + " by " + displayMeta.creator.map((creator) => creator.name).join(', ') + "."} />
         </Helmet>
         <script type="application/ld+json">

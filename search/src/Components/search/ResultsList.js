@@ -5,6 +5,23 @@ import {
 import ResultCard from './ResultCard';
 import { Helmet } from "react-helmet";
 
+
+const OgThumbnail = ({ url }) => {
+    const [imageDims, setImageDims] = React.useState(null);
+    React.useEffect(() => {
+        const img = new Image();
+        img.src = url;
+        img.onload = (ev) => { setImageDims({"width": ev.target.width, "height": ev.target.height}); }
+    });
+    return (
+        <Helmet>
+            <meta property="og:image" content={url} />
+            {imageDims && <meta property="og:image:width" content={imageDims.width} />}
+            {imageDims && <meta property="og:image:height" content={imageDims.height} />}
+        </Helmet>
+    );
+}
+
 const ResultsList = ({ listProps, cardProps, setOGImage, baseURL }) => {
   const computedBaseURL = baseURL || new URL(window.location.origin);
   return (
@@ -34,7 +51,8 @@ const ResultsList = ({ listProps, cardProps, setOGImage, baseURL }) => {
                 />,
                 // XXX: side-effects
                 // Use the first result as the page's thumbnail for social media:
-                (!setOGImage || idx !== 0) ? [] : <Helmet><meta property="og:image" content={computedBaseURL + (item.thumbnail_bbox || item.thumbnail)} /></Helmet>
+                (!setOGImage || idx !== 0) ? [] :
+                  <OgThumbnail url={computedBaseURL + (item.thumbnail_bbox || item.thumbnail)} />
               ])
             }
           </ReactiveList.ResultCardsWrapper>
