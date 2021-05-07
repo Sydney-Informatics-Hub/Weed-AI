@@ -199,7 +199,7 @@ def test_coco_compatible_good(func, coco):
             if k != "annotations"
         },
         # rename to WeedCOCO-incompatible categories:
-        _set_category_name(_weedcoco_to_coco(SMALL_WEEDCOCO), "foobar"),
+        _set_category_name(_weedcoco_to_coco(SMALL_WEEDCOCO), 1),
     ],
 )
 def test_coco_compatible_bad(func, bad_coco):

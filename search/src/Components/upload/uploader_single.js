@@ -23,6 +23,7 @@ const UploaderSingle  = (props) => {
             const res = JSON.parse(xhr.response)
             props.handleUploadId(res.upload_id)
             props.handleImages(res.images)
+            props.handleCategories(res.categories)
             props.handleErrorMessage("")
         }
         else if (status === 'error_upload'){

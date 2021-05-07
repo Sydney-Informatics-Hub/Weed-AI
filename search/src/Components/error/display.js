@@ -11,6 +11,7 @@ const styles = (theme) => ({
     brief: {
         color: 'red',
         marginTop: '0.5em',
+        marginRight: '1em'
     },
 });
 

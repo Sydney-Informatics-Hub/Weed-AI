@@ -18,4 +18,4 @@ properties:
   categories:
     type: array
     items:
-      $ref: https://weedid.sydney.edu.au/schema/Category.json#/
+      $ref: https://weedid.sydney.edu.au/schema/CocoCategory.json#/

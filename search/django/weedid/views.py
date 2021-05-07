@@ -13,8 +13,10 @@ from weedid.utils import (
     create_upload_entity,
     retrieve_listing_info,
     remove_entity_local_record,
+    set_categories,
     add_agcontexts,
     add_metadata,
+    retrieve_category_name,
 )
 from weedid.models import Dataset, WeedidUser
 from weedcoco.validation import validate, JsonValidationError
@@ -68,6 +70,9 @@ def upload(request):
         )
         for image_reference in weedcoco_json["images"]:
             images.append(image_reference["file_name"].split("/")[-1])
+        categories = [
+            retrieve_category_name(category) for category in weedcoco_json["categories"]
+        ]
         upload_dir, upload_id = setup_upload_dir(os.path.join(UPLOAD_DIR, str(user.id)))
         weedcoco_path = store_tmp_weedcoco(file_weedcoco, upload_dir)
         create_upload_entity(weedcoco_path, upload_id, user.id)
@@ -78,7 +83,11 @@ def upload(request):
         traceback.print_exc()
         return HttpResponseBadRequest(str(e))
     else:
-        return HttpResponse(json.dumps({"upload_id": upload_id, "images": images}))
+        return HttpResponse(
+            json.dumps(
+                {"upload_id": upload_id, "images": images, "categories": categories}
+            )
+        )
 
 
 def upload_image(request):
@@ -94,6 +103,27 @@ def upload_image(request):
     upload_dir = os.path.join(UPLOAD_DIR, str(user.id), upload_id, "images")
     store_tmp_image(upload_image, upload_dir)
     return HttpResponse(f"Uploaded {upload_image.name} to {upload_dir}")
+
+
+def update_categories(request):
+    if not request.method == "POST":
+        return HttpResponseNotAllowed(request.method)
+    user = request.user
+    if not (user and user.is_authenticated):
+        return HttpResponseForbidden("You dont have access to proceed")
+    data = json.loads(request.body)
+    upload_id, categories = data["upload_id"], data["categories"]
+    weedcoco_path = os.path.join(
+        UPLOAD_DIR, str(user.id), str(upload_id), "weedcoco.json"
+    )
+    try:
+        set_categories(weedcoco_path, categories)
+    except Exception:
+        return HttpResponseNotAllowed("Failed to update categories")
+    else:
+        return HttpResponse(
+            f"Updated categories for user {user.id}'s upload{upload_id}"
+        )
 
 
 def upload_agcontexts(request):

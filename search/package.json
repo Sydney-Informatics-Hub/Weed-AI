@@ -23,6 +23,7 @@
     "helmet": "^4.4.1",
     "js-cookie": "^2.2.1",
     "js-yaml": "^4.0.0",
+    "lodash.clonedeep": "^4.5.0",
     "node-fetch": "^2.6.1",
     "node-forge": "^0.10.0",
     "react": "^16.13.1",
